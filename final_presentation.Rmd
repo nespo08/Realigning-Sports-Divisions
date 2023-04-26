@@ -1,0 +1,181 @@
+---
+title: "Final Presentation"
+author: "Nicholas Esposito"
+date: "2023-04-24"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This .rmd file is used for figure generation 
+
+```{r, echo=FALSE}
+library(usmap)
+library(maptools)
+library(ggplot2)
+library(rgdal)
+library(tidyverse)
+library(kableExtra)
+
+
+current_division_table <- read_rds("Data/current_div_table.rds")
+new_division_table <- read_rds("Data/division_information.rds")
+travel_table <- read_rds("Data/travel_numbers.rds")
+
+# Python divisions
+temp_table <- new_division_table %>%
+group_by(League, Python_Divisions) %>%
+arrange(League, Python_Divisions) %>%
+select(League, Team, Python_Divisions)
+
+# MLB Current
+kable(current_division_table[1:5,], caption = "**AL Central**") %>%
+  kable_styling(full_width = FALSE, position = "float_left") %>%
+  remove_column(3)
+kable(current_division_table[6:10,], caption = "**AL East**") %>%
+  kable_styling(full_width = FALSE, position = "left") %>%
+  remove_column(3)
+kable(current_division_table[11:15,], caption = "**AL West**") %>%
+  kable_styling(full_width = FALSE, position = "float_left") %>%
+  remove_column(3)
+kable(current_division_table[16:20,], caption = "**NL Central**") %>%
+  kable_styling(full_width = FALSE, position = "left") %>%
+  remove_column(3)
+kable(current_division_table[21:25,], caption = "**NL East**") %>%
+  kable_styling(full_width = FALSE, position = "float_left") %>%
+  remove_column(3)
+kable(current_division_table[26:30,], caption = "**NL West**") %>%
+  kable_styling(full_width = FALSE, position = "left") %>%
+  remove_column(3)
+
+# MLB New - Only Python Divisions
+  
+kable(temp_table[1:5,]) %>%
+  kable_styling(full_width = FALSE, position = "float_left") %>%
+  remove_column(3)
+kable(temp_table[6:10,]) %>%
+  kable_styling(full_width = FALSE, position = "left") %>%
+  remove_column(3)
+kable(temp_table[11:15,]) %>%
+  kable_styling(full_width = FALSE, position = "float_left") %>%
+  remove_column(3)
+kable(temp_table[16:20,]) %>%
+  kable_styling(full_width = FALSE, position = "left") %>%
+  remove_column(3)
+kable(temp_table[21:25,]) %>%
+  kable_styling(full_width = FALSE, position = "float_left") %>%
+  remove_column(3)
+kable(temp_table[26:30,]) %>%
+  kable_styling(full_width = FALSE, position = "left") %>%
+  remove_column(3)
+
+# NBA Current
+kable(current_division_table[31:45,], caption = "**East**") %>%
+  kable_styling(full_width = FALSE, position = "float_left") %>%
+  remove_column(3)
+kable(current_division_table[46:60,], caption = "**West**") %>%
+  kable_styling(full_width = FALSE, position = "left") %>%
+  remove_column(3)
+
+# NBA New
+kable(temp_table[31:45,]) %>%
+  kable_styling(full_width = FALSE, position = "float_left") %>%
+  remove_column(3)
+kable(temp_table[46:60,]) %>%
+  kable_styling(full_width = FALSE, position = "left") %>%
+  remove_column(3)
+
+# NFL Current
+kable(current_division_table[61:64,], caption = "**AFC East**") %>%
+  kable_styling(full_width = FALSE, position = "float_left") %>%
+  remove_column(3)
+kable(current_division_table[65:68,], caption = "**AFC North**") %>%
+  kable_styling(full_width = FALSE, position = "left") %>%
+  remove_column(3)
+kable(current_division_table[69:72,], caption = "**AFC South**") %>%
+  kable_styling(full_width = FALSE, position = "float_left") %>%
+  remove_column(3)
+kable(current_division_table[73:76,], caption = "**AFC West**") %>%
+  kable_styling(full_width = FALSE, position = "left") %>%
+  remove_column(3)
+kable(current_division_table[77:80,], caption = "**NFC East**") %>%
+  kable_styling(full_width = FALSE, position = "float_left") %>%
+  remove_column(3)
+kable(current_division_table[81:84,], caption = "**NFC North**") %>%
+  kable_styling(full_width = FALSE, position = "left") %>%
+  remove_column(3)
+kable(current_division_table[85:88,], caption = "**NFC South**") %>%
+  kable_styling(full_width = FALSE, position = "float_left") %>%
+  remove_column(3)
+kable(current_division_table[89:92,], caption = "**NFC West**") %>%
+  kable_styling(full_width = FALSE, position = "left") %>%
+  remove_column(3)
+
+# NFL New
+kable(temp_table[61:64,]) %>%
+  kable_styling(full_width = FALSE, position = "float_left") %>%
+  remove_column(3)
+kable(temp_table[65:68,]) %>%
+  kable_styling(full_width = FALSE, position = "left") %>%
+  remove_column(3)
+kable(temp_table[69:72,]) %>%
+  kable_styling(full_width = FALSE, position = "float_left") %>%
+  remove_column(3)
+kable(temp_table[73:76,]) %>%
+  kable_styling(full_width = FALSE, position = "left") %>%
+  remove_column(3)
+kable(temp_table[77:80,]) %>%
+  kable_styling(full_width = FALSE, position = "float_left") %>%
+  remove_column(3)
+kable(temp_table[81:84,]) %>%
+  kable_styling(full_width = FALSE, position = "left") %>%
+  remove_column(3)
+kable(temp_table[85:88,]) %>%
+  kable_styling(full_width = FALSE, position = "float_left") %>%
+  remove_column(3)
+kable(temp_table[89:92,]) %>%
+  kable_styling(full_width = FALSE, position = "left") %>%
+  remove_column(3)
+
+# NHL Current
+kable(current_division_table[93:100,], caption = "**Atlantic**") %>%
+  kable_styling(full_width = FALSE, position = "float_left") %>%
+  remove_column(3)
+kable(current_division_table[101:108,], caption = "**Central**") %>%
+  kable_styling(full_width = FALSE, position = "left") %>%
+  remove_column(3)
+kable(current_division_table[109:116,], caption = "**Metropolitan**") %>%
+  kable_styling(full_width = FALSE, position = "float_left") %>%
+  remove_column(3)
+kable(current_division_table[117:124,], caption = "**Pacific**") %>%
+  kable_styling(full_width = FALSE, position = "left") %>%
+  remove_column(3)
+
+# NHL New
+kable(temp_table[93:100,]) %>%
+  kable_styling(full_width = FALSE, position = "float_left") %>%
+  remove_column(3)
+kable(temp_table[101:108,]) %>%
+  kable_styling(full_width = FALSE, position = "left") %>%
+  remove_column(3)
+kable(temp_table[109:116,]) %>%
+  kable_styling(full_width = FALSE, position = "float_left") %>%
+  remove_column(3)
+kable(temp_table[117:124,]) %>%
+  kable_styling(full_width = FALSE, position = "left") %>%
+  remove_column(3)
+
+# Distances
+kable(travel_table) %>%
+  kable_styling(full_width = TRUE, position = "left") %>%
+  remove_column(1) %>%
+  column_spec(4, color = "white", background = ifelse(travel_table$"M1 Change" < 0, "green", "red")) %>%
+  column_spec(6, color = "white", background = ifelse(travel_table$"M2 Change" < 0, "green", "red")) %>%
+  column_spec(8, color = "white", background = ifelse(travel_table$"Constrained K-Means Change" < 0, "green", "red"))
+  
+```
+
